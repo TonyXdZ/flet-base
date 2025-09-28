@@ -5,7 +5,7 @@ from pages.login import LoginModel
 from pages.signup import SignUpModel 
 
 def main(page: ft.Page):
-    page.title = "Flet Boilerplate"
+    page.title = "YOUR APP NAME"
     page.window.height = 712
     page.window.width = 375
     page.go("/login")
