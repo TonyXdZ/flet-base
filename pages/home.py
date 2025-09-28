@@ -1,102 +1,95 @@
 import flet as ft
-from flet_model import Model, route
+from flet_model import route
+from pages.base import BasePage
 
-@route('home')
-class HomeModel(Model):
+@route("home")
+class HomeModel(BasePage):
 
-    # Layout configuration
-    vertical_alignment = ft.MainAxisAlignment.CENTER
-    horizontal_alignment = ft.CrossAxisAlignment.CENTER
-    padding = 20
-    spacing = 10
+    def __init__(self, page: ft.Page):
+        super().__init__(page)
 
-    # UI Components
-    appbar = ft.AppBar(
-        title=ft.Text("Flet dev Boilerplate"),
-        center_title=True,
-        bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST
-    )
+        # Build views using helper methods
+        self.home_view = self.build_container(
+            ft.Column(
+                controls=[
+                    self.build_text("🏠 Welcome Home!"),
+                    ft.Text("This is your home dashboard. Enjoy the dark mode theme.",
+                            size=14, color="white70", text_align=ft.TextAlign.CENTER),
+                ],
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                alignment=ft.MainAxisAlignment.CENTER,
+            ),
+            visible=True,
+        )
 
-    home_view = ft.Container(
-                    content=ft.Column(
-                        controls=[
-                            ft.Text("Welcome to Home Page", size=22),
-                        ]
-                    ),
-                    margin=10,
-                    padding=10,
-                    alignment=ft.alignment.center,
-                    visible=True,
-                )
-    
-    profile_view = ft.Container(
-                    content=ft.Column(
-                        controls=[
-                            ft.Text("Welcome to Profile Page", size=22),
-                        ]
-                    ),
-                    margin=10,
-                    padding=10,
-                    alignment=ft.alignment.center,
-                    visible=False,
-                )
+        self.profile_view = self.build_container(
+            ft.Column(
+                controls=[
+                    self.build_text("👤 Profile Page"),
+                    ft.Text("Here you can update your account details.",
+                            size=14, color="white70", text_align=ft.TextAlign.CENTER),
+                ],
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                alignment=ft.MainAxisAlignment.CENTER,
+            ),
+            visible=False,
+        )
 
-    messages_view = ft.Container(
-                    content=ft.Column(
-                        controls=[
-                            ft.Text("Welcome to Messages Page", size=22),
-                        ]
-                    ),
-                    margin=10,
-                    padding=10,
-                    alignment=ft.alignment.center,
-                    visible=False,
-                )
+        self.notifications_view = self.build_container(
+            ft.Column(
+                controls=[
+                    self.build_text("🔔 Notifications"),
+                    ft.Text("Stay updated with the latest alerts and updates here.",
+                            size=14, color="white70", text_align=ft.TextAlign.CENTER),
+                ],
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                alignment=ft.MainAxisAlignment.CENTER,
+            ),
+            visible=False,
+        )
 
-    navigation_bar = ft.NavigationBar(
-        destinations=[
-            ft.NavigationBarDestination(icon=ft.Icons.PERSON, label="Profile"),
-            ft.NavigationBarDestination(icon=ft.Icons.HOME, label="Home"),
-            ft.NavigationBarDestination(icon=ft.Icons.MESSAGE, label="Messages"),
-        ],
-        selected_index=1,
-        on_change="handle_navigation",
-    )
+        # Navigation bar
+        self.navigation_bar = ft.NavigationBar(
+            bgcolor="#1e1e1e",
+            indicator_color="#1DB954",
+            selected_index=1,
+            destinations=[
+                ft.NavigationBarDestination(icon=ft.Icons.PERSON, label="Profile"),
+                ft.NavigationBarDestination(icon=ft.Icons.HOME, label="Home"),
+                ft.NavigationBarDestination(icon=ft.Icons.NOTIFICATIONS, label="Notifications"),
+            ],
+            on_change=self.handle_navigation,
+        )
 
-    controls = [
-        home_view,
-        profile_view,
-        messages_view,
-        navigation_bar,
-    ]
-
-    def navigate_to_login(self, e):
-        self.page.go('/login')
+        # Controls
+        self.controls = [
+            ft.Column(
+                controls=[
+                    self.home_view,
+                    self.profile_view,
+                    self.notifications_view,
+                ],
+                expand=True,
+                alignment=ft.MainAxisAlignment.CENTER,
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            ),
+            self.navigation_bar,
+        ]
 
     def handle_navigation(self, e):
-        """
-        Handle changes in navigation bar and update the page 
-        accordingly by hiding/showing the container related to the selection
-        in this case we have only three navigation destination
-        
-        1- Profile (index 0)
-        2- Home (index 1) selected by default 
-        3- message (index 2)
-        """
-        if e.data == '0':#Profile selected
-            self.messages_view.visible = False
+        """Switch views when navigation bar changes."""
+        if e.data == "0":  # Profile
+            self.notifications_view.visible = False
             self.profile_view.visible = True
             self.home_view.visible = False
 
-        elif e.data == '1':#Home selected
-            print("in Home view")
-            self.messages_view.visible = False
+        elif e.data == "1":  # Home
+            self.notifications_view.visible = False
             self.profile_view.visible = False
             self.home_view.visible = True
-        
-        elif e.data == '2':#Messages selected
-            print("in Messages view")
-            self.messages_view.visible = True
+
+        elif e.data == "2":  # Notifications
+            self.notifications_view.visible = True
             self.profile_view.visible = False
             self.home_view.visible = False
 
