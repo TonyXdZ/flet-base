@@ -1,7 +1,7 @@
 # Flet-Base
 
 This repository contains a basic Flet application built using the Flet-model module. It demonstrates core functionalities like:
-![Flet-base app preview screenshots](https://github.com/TonyXdZ/flet-base/blob/434bb2d59aa2f96b3758f5cc4e8252d16b5a9d51/flet-base-preview.png)
+![Flet-base app preview screenshots](https://raw.githubusercontent.com/TonyXdZ/flet-base/main/flet-base-preview.png?v=1)
 - **User Authentication:**
 
     - Login page with username and password input fields.
